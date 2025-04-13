@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-programozás 1 Házi feladat</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Web-programozás 1 Előadás Házi feladat</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Kezdőlap</a></li>
+            <li><a href="table.html">Táblázat menü</a></li>
+            <li><a href="html5.html">HTML5 menü</a></li>
+            <li><a href="chart.html">ChartJS menü</a></li>
+            <li><a href="ajax.html">AJAX menü</a></li>
+            <li><a href="oojs.html">OOJS menü</a></li>
+            <li><a href="react.html">React</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <aside>
+            <h3>Oldal tartalma</h3>
+            <p>Ez a beadandó első feladata.</p>
+        </aside>
+        
+        <main id="content">
+            <h2>HTML5 technológiák</h2>
+            
+            <div class="html5-examples">
+                <section>
+                    <h3>Web Storage</h3>
+                    <div>
+                        <input type="text" id="storage-input" placeholder="Írj ide valamit...">
+                        <button id="save-storage">Mentés</button>
+                        <button id="clear-storage">Törlés</button>
+                    </div>
+                    <p id="storage-output"></p>
+                </section>
+                
+                <section>
+                    <h3>Geolocation API</h3>
+                    <button id="get-location">Helyzet lekérése</button>
+                    <div id="location-output"></div>
+                </section>
+                
+                <section>
+                    <h3>Drag and Drop API</h3>
+                    <div id="drag-container">
+                        <div id="drag-item" draggable="true">Húzz engem!</div>
+                        <div id="drop-zone">Ide dobj!</div>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Canvas</h3>
+                    <canvas id="my-canvas" width="200" height="100"></canvas>
+                    <button id="draw-canvas">Rajzolás</button>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>Sik Dominik - Q60PVQ</p>
+    </footer>
+    
+    <script src="/src/js/html5.js"></script>
+</body>
+</html>
