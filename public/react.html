@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>React App - Calculator & To-Do</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
+    nav { background: #333; }
+    nav a { color: white; padding: 15px 20px; display: inline-block; text-decoration: none; }
+    nav a.active { background: #555; }
+    nav a:hover { background: #444; }
+    .container { max-width: 600px; margin: 30px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+    h2 { text-align: center; }
+    .calculator-display { width: 100%; height: 50px; font-size: 2em; text-align: right; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .calculator-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .calculator-keys button { padding: 20px; font-size: 1.2em; border: none; border-radius: 5px; cursor: pointer; background: #eee; }
+    .calculator-keys button.operator { background: #f9a825; color: white; }
+    .calculator-keys button.equal-sign { background: #4caf50; color: white; grid-column: span 2; }
+    .calculator-keys button.clear { background: #f44336; color: white; }
+    .todo-input { display: flex; margin-bottom: 20px; }
+    .todo-input input { flex: 1; padding: 10px; }
+    .todo-input button { padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; }
+    li.completed { text-decoration: line-through; color: #888; }
+    .delete-btn { background: #f44336; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { HashRouter, Routes, Route, NavLink } = ReactRouterDOM;
+  
+    function App() {
+      return (
+        <HashRouter>
+          <nav>
+            <NavLink to="/" end className={({isActive}) => isActive ? "active" : ""}>Számológép</NavLink>
+            <NavLink to="/todo" className={({isActive}) => isActive ? "active" : ""}>Teendők</NavLink>
+          </nav>
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Calculator />} />
+              <Route path="/todo" element={<TodoApp />} />
+            </Routes>
+          </div>
+        </HashRouter>
+      );
+    }
+
+    function Calculator() {
+      const [display, setDisplay] = React.useState('0');
+      const [firstOperand, setFirstOperand] = React.useState(null);
+      const [operator, setOperator] = React.useState(null);
+      const [waitingForSecondOperand, setWaitingForSecondOperand] = React.useState(false);
+
+      const inputDigit = (digit) => {
+        if (waitingForSecondOperand) {
+          setDisplay(String(digit));
+          setWaitingForSecondOperand(false);
+        } else {
+          setDisplay(display === '0' ? String(digit) : display + digit);
+        }
+      };
+
+      const inputDecimal = () => {
+        if (waitingForSecondOperand) {
+          setDisplay('0.');
+          setWaitingForSecondOperand(false);
+          return;
+        }
+        if (!display.includes('.')) {
+          setDisplay(display + '.');
+        }
+      };
+
+      const clearDisplay = () => {
+        setDisplay('0');
+        setFirstOperand(null);
+        setOperator(null);
+        setWaitingForSecondOperand(false);
+      };
+
+      const handleOperator = (nextOperator) => {
+        const inputValue = parseFloat(display);
+
+        if (firstOperand == null) {
+          setFirstOperand(inputValue);
+        } else if (operator) {
+          const result = calculate(firstOperand, inputValue, operator);
+          setDisplay(String(result));
+          setFirstOperand(result);
+        }
+
+        setOperator(nextOperator);
+        setWaitingForSecondOperand(true);
+      };
+
+      const calculate = (first, second, operator) => {
+        if (operator === '+') return first + second;
+        if (operator === '-') return first - second;
+        if (operator === '*') return first * second;
+        if (operator === '/') return second !== 0 ? first / second : 'Error';
+        return second;
+      };
+
+      const handleEqual = () => {
+        if (operator && firstOperand != null) {
+          const secondOperand = parseFloat(display);
+          const result = calculate(firstOperand, secondOperand, operator);
+          setDisplay(String(result));
+          setFirstOperand(null);
+          setOperator(null);
+          setWaitingForSecondOperand(false);
+        }
+      };
+
+      return (
+        <>
+          <h2>Számológép</h2>
+          <div className="calculator-display">{display}</div>
+          <div className="calculator-keys">
+            <button className="operator" onClick={() => handleOperator('+')}>+</button>
+            <button className="operator" onClick={() => handleOperator('-')}>-</button>
+            <button className="operator" onClick={() => handleOperator('*')}>×</button>
+            <button className="operator" onClick={() => handleOperator('/')}>÷</button>
+
+            {[7,8,9,4,5,6,1,2,3,0].map((num) => (
+              <button key={num} onClick={() => inputDigit(num)}>{num}</button>
+            ))}
+            <button onClick={inputDecimal}>.</button>
+            <button className="clear" onClick={clearDisplay}>C</button>
+            <button className="equal-sign" onClick={handleEqual}>=</button>
+          </div>
+        </>
+      );
+    }
+
+    function TodoApp() {
+      const [todos, setTodos] = React.useState([]);
+      const [input, setInput] = React.useState('');
+
+      const addTodo = () => {
+        if (input.trim() !== '') {
+          setTodos([...todos, { text: input, completed: false, id: Date.now() }]);
+          setInput('');
+        }
+      };
+
+      const toggleTodo = (id) => {
+        setTodos(todos.map(todo => 
+          todo.id === id ? {...todo, completed: !todo.completed} : todo
+        ));
+      };
+
+      const deleteTodo = (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+      };
+
+      return (
+        <>
+          <h2>Teendők</h2>
+          <div className="todo-input">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Új teendő"
+              onKeyDown={(e) => { if (e.key === 'Enter') addTodo(); }}
+            />
+            <button onClick={addTodo}>Hozzáad</button>
+          </div>
+          <ul>
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                className={todo.completed ? 'completed' : ''}
+                onClick={() => toggleTodo(todo.id)}
+              >
+                {todo.text}
+                <button 
+                  className="delete-btn" 
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    deleteTodo(todo.id); 
+                  }}
+                >
+                  Törlés
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
