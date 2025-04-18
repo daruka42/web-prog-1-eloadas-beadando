@@ -26,7 +26,13 @@
     <div class="container">
         <aside>
             <h3>Oldal tartalma</h3>
-            <p>Ez a beadandó első feladata.</p>
+            <p>Egységesen megjelenő honlap vízszintes menüvel</p>
+            <p>Táblázat menü</p>
+            <p>HTML5 menü</p>
+            <p>ChartJS menü</p>
+            <p>AJAX menü</p>
+            <p>OOJS menü</p>
+            <p>React</p>
         </aside>
         
         <main id="content">
@@ -52,5 +58,16 @@
     </footer>
     
     <script src="/src/js/oojs.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const currentPage = location.pathname.split("/").pop();
+          document.querySelectorAll("nav a").forEach(link => {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === currentPage) {
+              link.classList.add("active");
+            }
+          });
+        });
+      </script>
 </body>
 </html>

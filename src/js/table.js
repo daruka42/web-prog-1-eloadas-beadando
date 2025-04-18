@@ -43,14 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     addRowBtn.addEventListener('click', function() {
-        const newId = tableData.length > 0 ? Math.max(...tableData.map(row => row.id)) + 1 : 1;
-        const newRow = {
-            id: newId,
-            name: 'Új felhasználó',
-            age: 25,
-            city: 'Város',
-            job: 'Foglalkozás'
-        };
+        document.getElementById('edit-id').value = '';
+        document.getElementById('edit-name').value = '';
+        modal.style.display = 'block';
+        });
         
         tableData.push(newRow);
         renderTable(tableData);
@@ -94,15 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
     sortDirection.addEventListener('change', sortTable);
     
     function sortTable() {
-        const columnIndex = sortColumn.value;
+        const columnKey = ['name', 'age', 'city', 'job'][sortColumn.value];
         const direction = sortDirection.value;
         
-        if (columnIndex === '') return;
-        
         tableData.sort((a, b) => {
-            const keyA = Object.values(a)[columnIndex];
-            const keyB = Object.values(b)[columnIndex];
-            
+          const keyA = a[columnKey];
+          const keyB = b[columnKey];
             if (typeof keyA === 'string') {
                 return direction === 'asc' 
                     ? keyA.localeCompare(keyB)
