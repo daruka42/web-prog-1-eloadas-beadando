@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web-programozás 1 Házi feladat</title>
-    <link rel="stylesheet" href="/src/css/styles.css">
-    <link rel="stylesheet" href="/src/react/dist/assets/index-6d091d40.css">
+    <link rel="stylesheet" href="../src/css/styles.css">
+    <link rel="stylesheet" href="../src/react/dist/assets/index-6d091d40.css">
 </head>
 <body>
     <div id="legacy-content" style="display: none;">
@@ -14,25 +14,25 @@
         </header>
         <nav>
             <ul>
-                <li><a href="#/" class="active">Kezdőlap</a></li>
-                <li><a href="#/calculator">Számológép</a></li>
-                <li><a href="#/table">Táblázat menü</a></li>
-                <li><a href="#/html5">HTML5 menü</a></li>
-                <li><a href="#/chart">ChartJS menü</a></li>
-                <li><a href="#/ajax">AJAX menü</a></li>
-                <li><a href="#/oojs">OOJS menü</a></li>
+                <li><a href="index.html" class="active">Kezdőlap</a></li>
+                <li><a href="table.html">Táblázat menü</a></li>
+                <li><a href="html5.html">HTML5 menü</a></li>
+                <li><a href="ajax.html">AJAX menü</a></li>
+                <li><a href="oojs.html">OOJS menü</a></li>
+                <li><a href="reactchart.html">React Chart</a></li>
+                <li><a href="index.html#/calculator">Számológép</a></li>
             </ul>
         </nav>
         <div class="container">
             <aside>
                 <h3>Oldal tartalma</h3>
                 <p>Egységesen megjelenő honlap vízszintes menüvel</p>
-                <p>Számológép</p>
                 <p>Táblázat menü</p>
                 <p>HTML5 menü</p>
-                <p>ChartJS menü</p>
                 <p>AJAX menü</p>
                 <p>OOJS menü</p>
+                <p>React Chart</p>
+                <p>Számológép (React)</p>
             </aside>
             <main id="content"></main>
         </div>
@@ -41,10 +41,15 @@
         </footer>
     </div>
     <div id="root"></div>
-    <script type="module" src="./src/react/dist/assets/index-ddc1e082.js"></script>
+    <script type="module" src="../src/react/dist/assets/index-ddc1e082.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            window.location.hash = '/calculator';
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentHash = window.location.hash;
+        
+        if (currentHash === '#/calculator' || !currentHash) {
+            if (!currentHash) {
+                window.location.hash = '/calculator';
+            }
             
             setTimeout(function() {
                 const rootContent = document.getElementById('root').innerHTML.trim();
@@ -54,7 +59,10 @@
                     document.body.classList.add('react-loaded');
                 }
             }, 300);
-        });
+        } else {
+            document.getElementById('legacy-content').style.display = 'block';
+        }
+    });
     </script>
 </body>
 </html>
