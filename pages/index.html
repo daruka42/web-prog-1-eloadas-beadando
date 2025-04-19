@@ -1,58 +1,61 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web-programozás 1 Házi feladat</title>
-    <link rel="stylesheet" href="/src/css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device‑width, initial‑scale=1.0">
+  <title>Web‑programozás 1 Házi feladat</title>
+  <link rel="stylesheet" href="./src/css/styles.css">
+  <link rel="stylesheet" href="./src/react/dist/assets/index-6d091d40.css">
 </head>
 <body>
+  <div id="legacy-content" style="display: none;">
     <header>
-        <h1>Web-programozás 1 Előadás Házi feladat</h1>
+      <h1>Web‑programozás 1 Előadás Házi feladat</h1>
     </header>
-    
+
     <nav>
-        <ul>
-            <li><a href="index.html" class="active">Kezdőlap</a></li>
-            <li><a href="table.html">Táblázat menü</a></li>
-            <li><a href="html5.html">HTML5 menü</a></li>
-            <li><a href="chart.html">ChartJS menü</a></li>
-            <li><a href="ajax.html">AJAX menü</a></li>
-            <li><a href="oojs.html">OOJS menü</a></li>
-            <li><a href="react/index.html">React</a></li>
-        </ul>
+      <ul>
+        <li><a href="index.html" class="active">Kezdőlap</a></li>
+        <li><a href="table.html">Táblázat menü</a></li>
+        <li><a href="html5.html">HTML5 menü</a></li>
+        <li><a href="chart.html">ChartJS menü</a></li>
+        <li><a href="ajax.html">AJAX menü</a></li>
+        <li><a href="oojs.html">OOJS menü</a></li>
+      </ul>
     </nav>
-    
+
     <div class="container">
-        <aside>
-            <h3>Oldal tartalma</h3>
-            <p>Egységesen megjelenő honlap vízszintes menüvel</p>
-            <p>Táblázat menü</p>
-            <p>HTML5 menü</p>
-            <p>ChartJS menü</p>
-            <p>AJAX menü</p>
-            <p>OOJS menü</p>
-            <p>React</p>
-        </aside>
-        
-        <main id="content">
-            <div id="root"></div>
-        </main>
+      <aside>
+        <h3>Oldal tartalma</h3>
+        <p>Egységesen megjelenő honlap vízszintes menüvel</p>
+        <p>Táblázat menü</p>
+        <p>HTML5 menü</p>
+        <p>ChartJS menü</p>
+        <p>AJAX menü</p>
+        <p>OOJS menü</p>
+      </aside>
+
+      <main id="content">
+      </main>
     </div>
-    
+
     <footer>
-        <p>Sik Dominik - Q60PVQ</p>
+      <p>Sik Dominik – Q60PVQ</p>
     </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          const currentPage = location.pathname.split("/").pop();
-          document.querySelectorAll("nav a").forEach(link => {
-            link.classList.remove("active");
-            if (link.getAttribute("href") === currentPage) {
-              link.classList.add("active");
-            }
-          });
-        });
-      </script>
+  </div>
+
+  <div id="root"></div>
+
+  <script type="module" src="./src/react/dist/assets/index-ddc1e082.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const rootContent = document.getElementById('root').innerHTML.trim();
+        if (rootContent === '') {
+          document.getElementById('legacy-content').style.display = 'block';
+        }
+      }, 500);
+    });
+  </script>
 </body>
 </html>

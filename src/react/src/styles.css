@@ -115,7 +115,6 @@
     margin-top: 3rem;
   }
   
-  /* Reszponzív design */
   @media (max-width: 768px) {
     .container {
       flex-direction: column;
@@ -157,7 +156,6 @@
     }
   }
   
-  /* Egyedi elemek a táblázatos oldalhoz */
   .table-controls {
     display: flex;
     gap: 1rem;
@@ -263,4 +261,28 @@
 
 #chart-data tr:hover {
     background-color: #f8f9fa;
+}
+#root {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+}
+
+#root body {
+  margin: 0;
+  min-height: auto;
+  min-width: auto;
+  display: block;
+  background-color: var(--light-gray);
+  color: var(--text-color);
+}
+
+#root a {
+  color: var(--secondary-color);
+}
+
+#root button {
+  background-color: var(--secondary-color);
+  color: white;
 }
