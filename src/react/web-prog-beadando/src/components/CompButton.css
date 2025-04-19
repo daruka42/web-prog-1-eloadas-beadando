@@ -1,0 +1,17 @@
+/* Alapértelmezett stílusok, amelyeket a Calculator.css felülír */
+.key-button {
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  transition: all 0.2s;
+}
+
+.key-button:hover {
+  background-color: #e6e6e6;
+}
+
+.key-button:active {
+  transform: scale(0.95);
+}
