@@ -240,3 +240,22 @@
     font-size: 0.8rem;
     margin-top: 0.3rem;
   }
+
+  tr.selected {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.chart-container {
+    margin-top: 2rem;
+    max-width: 800px;
+}
+
+#chart-data {
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+#chart-data tr:hover {
+    background-color: #f8f9fa;
+}

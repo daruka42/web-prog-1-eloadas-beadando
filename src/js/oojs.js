@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         describe() {
-            alert(`Ez egy ${this.constructor.name.toLowerCase()} alakzat, színe: ${this.color}`);
+            const info = document.createElement('p');
+            info.textContent = `Ez egy ${this.constructor.name.toLowerCase()} alakzat, színe: ${this.color}`;
+            document.body.appendChild(info);
         }
         
         render() {

@@ -1,1 +1,5 @@
 test
+
+http://gamf.nhely.hu/ajax2/ 
+curl -X POST "http://gamf.nhely.hu/ajax2/" \
+     -d "op=create&code=Q60PVQefg456&name=Test&height=180&weight=80"

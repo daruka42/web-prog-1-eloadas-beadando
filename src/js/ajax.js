@@ -1,216 +1,199 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const API_URL = 'apiurlkellide';
-    
+    const API_URL = 'http://gamf.nhely.hu/ajax2/';
+    const NEPTUN_CODE = 'Q60PVQ';
+    const CUSTOM_CODE = 'efg456';
+    const API_CODE = NEPTUN_CODE + CUSTOM_CODE;
+
     const getDataBtn = document.getElementById('get-data');
     const dataOutput = document.getElementById('data-output');
     const statsOutput = document.getElementById('stats-output');
-    
     const createForm = document.getElementById('create-form');
-    const createName = document.getElementById('create-name');
-    const createHeight = document.getElementById('create-height');
-    const createOutput = document.getElementById('create-output');
-    
-    const updateId = document.getElementById('update-id');
-    const getDataForIdBtn = document.getElementById('get-data-for-id');
     const updateForm = document.getElementById('update-form');
-    const updateIdField = document.getElementById('update-id-field');
-    const updateName = document.getElementById('update-name');
-    const updateHeight = document.getElementById('update-height');
-    const updateOutput = document.getElementById('update-output');
-    
-    const deleteId = document.getElementById('delete-id');
     const deleteDataBtn = document.getElementById('delete-data');
-    const deleteOutput = document.getElementById('delete-output');
-    
-    getDataBtn.addEventListener('click', function() {
-        fetch(API_URL)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Hálózati hiba történt');
-                }
-                return response.json();
-            })
-            .then(data => {
-                dataOutput.innerHTML = '<h4>Adatok:</h4>';
-                data.forEach(item => {
-                    dataOutput.innerHTML += `
-                        <p>ID: ${item.id}, Név: ${item.name}, Magasság: ${item.height}</p>
-                    `;
-                });
+
+    const makeApiRequest = async (params) => {
+        const formData = new URLSearchParams();
+        formData.append('code', API_CODE);
+        
+        Object.entries(params).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+
+            if (!response.ok) throw new Error(`HTTP hiba: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            throw new Error(`API hiba: ${error.message}`);
+        }
+    };
+
+    getDataBtn.addEventListener('click', async () => {
+        try {
+            const result = await makeApiRequest({ op: 'read' });
+            
+            dataOutput.innerHTML = '<h4>Adatok:</h4>';
+            result.list.forEach(item => {
+                dataOutput.innerHTML += `
+                    <div class="data-item">
+                        <p>ID: ${item.id}</p>
+                        <p>Név: ${item.name}</p>
+                        <p>Magasság: ${item.height}</p>
+                    </div>
+                `;
+            });
+
+            if (result.list.length > 0) {
+                const heights = result.list.map(item => parseInt(item.height));
+                const sum = heights.reduce((a, b) => a + b, 0);
+                const avg = sum / heights.length;
+                const max = Math.max(...heights);
                 
-                if (data.length > 0) {
-                    const heights = data.map(item => parseInt(item.height));
-                    const sum = heights.reduce((a, b) => a + b, 0);
-                    const avg = sum / heights.length;
-                    const max = Math.max(...heights);
-                    
-                    statsOutput.innerHTML = `
+                statsOutput.innerHTML = `
+                    <div class="stats">
                         <h4>Statisztikák:</h4>
-                        <p>Összes magasság: ${sum}</p>
-                        <p>Átlag magasság: ${avg.toFixed(2)}</p>
-                        <p>Legnagyobb magasság: ${max}</p>
-                    `;
-                } else {
-                    statsOutput.innerHTML = '<p>Nincs adat a statisztikákhoz.</p>';
-                }
-            })
-            .catch(error => {
-                dataOutput.innerHTML = `<p class="error">Hiba történt: ${error.message}</p>`;
-                statsOutput.innerHTML = '';
-            });
-    });
-    
-    createForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const name = createName.value.trim();
-        const height = createHeight.value.trim();
-        let isValid = true;
-        
-        if (!name || name.length > 30) {
-            document.getElementById('create-name-error').textContent = 
-                !name ? 'A név kötelező!' : 'Maximum 30 karakter!';
-            isValid = false;
-        } else {
-            document.getElementById('create-name-error').textContent = '';
-        }
-        
-        if (!height) {
-            document.getElementById('create-height-error').textContent = 'A magasság kötelező!';
-            isValid = false;
-        } else {
-            document.getElementById('create-height-error').textContent = '';
-        }
-        
-        if (!isValid) return;
-        
-        fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: name,
-                height: parseInt(height)
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Hálózati hiba történt');
+                        <p>Összmagasság: ${sum} cm</p>
+                        <p>Átlagmagasság: ${avg.toFixed(1)} cm</p>
+                        <p>Legmagasabb: ${max} cm</p>
+                    </div>
+                `;
+            } else {
+                statsOutput.innerHTML = '<p>Nincs megjeleníthető adat</p>';
             }
-            return response.json();
-        })
-        .then(data => {
-            createOutput.innerHTML = `<p class="success">Sikeres létrehozás! ID: ${data.id}</p>`;
+        } catch (error) {
+            showError(dataOutput, error);
+            statsOutput.innerHTML = '';
+        }
+    });
+
+    createForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(createForm);
+        const errors = validateForm(formData, ['name', 'height']);
+
+        if (Object.values(errors).some(Boolean)) {
+            showFormErrors('create', errors);
+            return;
+        }
+
+        try {
+            const result = await makeApiRequest({
+                op: 'create',
+                name: formData.get('name').slice(0, 100),
+                height: formData.get('height').slice(0, 100),
+                weight: '0'
+            });
+
+            handleApiResponse('create', result);
             createForm.reset();
-        })
-        .catch(error => {
-            createOutput.innerHTML = `<p class="error">Hiba történt: ${error.message}</p>`;
-        });
-    });
-    
-    getDataForIdBtn.addEventListener('click', function() {
-        const id = updateId.value.trim();
-        
-        if (!id) {
-            updateOutput.innerHTML = '<p class="error">Az ID megadása kötelező!</p>';
-            return;
+        } catch (error) {
+            showError(document.getElementById('create-output'), error);
         }
-        
-        fetch(`${API_URL}/${id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Hálózati hiba történt vagy nem található az ID');
-                }
-                return response.json();
-            })
-            .then(data => {
-                updateIdField.value = data.id;
-                updateName.value = data.name;
-                updateHeight.value = data.height;
-                updateOutput.innerHTML = '<p class="success">Adatok betöltve!</p>';
-            })
-            .catch(error => {
-                updateOutput.innerHTML = `<p class="error">Hiba történt: ${error.message}</p>`;
-            });
     });
-    
-    updateForm.addEventListener('submit', function(e) {
+
+    updateForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const id = updateIdField.value;
-        const name = updateName.value.trim();
-        const height = updateHeight.value.trim();
-        let isValid = true;
-        
-        if (!name || name.length > 30) {
-            document.getElementById('update-name-error').textContent = 
-                !name ? 'A név kötelező!' : 'Maximum 30 karakter!';
-            isValid = false;
-        } else {
-            document.getElementById('update-name-error').textContent = '';
+        const formData = new FormData(updateForm);
+        const errors = validateForm(formData, ['name', 'height']);
+
+        if (Object.values(errors).some(Boolean)) {
+            showFormErrors('update', errors);
+            return;
         }
-        
-        if (!height) {
-            document.getElementById('update-height-error').textContent = 'A magasság kötelező!';
-            isValid = false;
-        } else {
-            document.getElementById('update-height-error').textContent = '';
+
+        try {
+            const result = await makeApiRequest({
+                op: 'update',
+                id: formData.get('id'),
+                name: formData.get('name').slice(0, 100),
+                height: formData.get('height').slice(0, 100),
+                weight: '0'
+            });
+
+            handleApiResponse('update', result);
+        } catch (error) {
+            showError(document.getElementById('update-output'), error);
         }
-        
-        if (!isValid) return;
-        
-        fetch(`${API_URL}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: name,
-                height: parseInt(height)
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Hálózati hiba történt');
-            }
-            return response.json();
-        })
-        .then(data => {
-            updateOutput.innerHTML = '<p class="success">Sikeres frissítés!</p>';
-        })
-        .catch(error => {
-            updateOutput.innerHTML = `<p class="error">Hiba történt: ${error.message}</p>`;
-        });
     });
-    
-    deleteDataBtn.addEventListener('click', function() {
-        const id = deleteId.value.trim();
-        
-        if (!id) {
-            deleteOutput.innerHTML = '<p class="error">Az ID megadása kötelező!</p>';
-            return;
+
+    deleteDataBtn.addEventListener('click', async () => {
+        const id = document.getElementById('delete-id').value;
+        if (!id || !confirm(`Biztos törlöd az ID=${id} rekordot?`)) return;
+
+        try {
+            const result = await makeApiRequest({
+                op: 'delete',
+                id: id
+            });
+
+            handleApiResponse('delete', result);
+            document.getElementById('delete-id').value = '';
+        } catch (error) {
+            showError(document.getElementById('delete-output'), error);
         }
+    });
+
+    function validateForm(formData, fields) {
+        const errors = {};
         
-        if (!confirm(`Biztosan törölni szeretné az ID=${id} rekordot?`)) {
-            return;
-        }
-        
-        fetch(`${API_URL}/${id}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Hálózati hiba történt vagy nem található az ID');
+        fields.forEach(field => {
+            const value = formData.get(field);
+            if (!value) {
+                errors[field] = 'Kötelező mező!';
+            } else if (value.length > 30) {
+                errors[field] = 'Max 30 karakter!';
             }
-            return response.json();
-        })
-        .then(data => {
-            deleteOutput.innerHTML = '<p class="success">Sikeres törlés!</p>';
-            deleteId.value = '';
-        })
-        .catch(error => {
-            deleteOutput.innerHTML = `<p class="error">Hiba történt: ${error.message}</p>`;
         });
+
+        return errors;
+    }
+
+    function showFormErrors(prefix, errors) {
+        Object.entries(errors).forEach(([field, message]) => {
+            const errorElement = document.getElementById(`${prefix}-${field}-error`);
+            if (errorElement) errorElement.textContent = message;
+        });
+    }
+
+    function handleApiResponse(operation, result) {
+        const outputElement = document.getElementById(`${operation}-output`);
+        if (result.rowCount > 0) {
+            outputElement.innerHTML = `<p class="success">Sikeres ${operation} művelet!</p>`;
+        } else {
+            outputElement.innerHTML = `<p class="error">Sikertelen ${operation} művelet</p>`;
+        }
+    }
+
+    function showError(element, error) {
+        element.innerHTML = `<p class="error">Hiba: ${error.message}</p>`;
+    }
+
+    document.getElementById('get-data-for-id').addEventListener('click', async () => {
+        const id = document.getElementById('update-id').value;
+        if (!id) return;
+
+        try {
+            const result = await makeApiRequest({
+                op: 'read',
+                id: id
+            });
+
+            if (result.list.length > 0) {
+                const data = result.list[0];
+                document.getElementById('update-id-field').value = data.id;
+                document.getElementById('update-name').value = data.name;
+                document.getElementById('update-height').value = data.height;
+                document.getElementById('update-output').innerHTML = '<p class="success">Adatok betöltve!</p>';
+            }
+        } catch (error) {
+            showError(document.getElementById('update-output'), error);
+        }
     });
 });
