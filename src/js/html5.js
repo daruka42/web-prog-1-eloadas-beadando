@@ -19,29 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         storageInput.value = '';
         storageOutput.textContent = 'Nincs mentett érték.';
     });
-    
-    const getLocationBtn = document.getElementById('get-location');
-    const locationOutput = document.getElementById('location-output');
-    
-    getLocationBtn.addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    locationOutput.innerHTML = `
-                        <p>Szélesség: ${position.coords.latitude}</p>
-                        <p>Hosszúság: ${position.coords.longitude}</p>
-                        <p>Pozíció időbélyege: ${new Date(position.timestamp)}</p>
-                    `;
-                },
-                function(error) {
-                    locationOutput.innerHTML = `Hiba történt: ${error.message}`;
-                }
-            );
-        } else {
-            locationOutput.textContent = 'A böngésző nem támogatja a geolokációt.';
-        }
-    });
-    
+
     const dragItem = document.getElementById('drag-item');
     const dropZone = document.getElementById('drop-zone');
     
