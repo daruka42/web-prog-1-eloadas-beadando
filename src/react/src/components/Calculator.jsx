@@ -8,7 +8,6 @@ function Calculator() {
   const [operation, setOperation] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
-  // Számjegy hozzáadása
   const inputDigit = (digit) => {
     if (waitingForOperand) {
       setDisplay(String(digit));
@@ -18,7 +17,6 @@ function Calculator() {
     }
   };
 
-  // Tizedesvessző hozzáadása
   const inputDot = () => {
     if (waitingForOperand) {
       setDisplay("0.");
@@ -30,19 +28,16 @@ function Calculator() {
     }
   };
 
-  // Előjel váltás
   const toggleSign = () => {
     const newValue = parseFloat(display) * -1;
     setDisplay(String(newValue));
   };
 
-  // Százalék számítás
   const calculatePercentage = () => {
     const value = parseFloat(display);
     setDisplay(String(value / 100));
   };
 
-  // Törlés
   const clearAll = () => {
     setDisplay("0");
     setPrevValue(null);
@@ -50,7 +45,6 @@ function Calculator() {
     setWaitingForOperand(false);
   };
 
-  // Művelet végrehajtása
   const performOperation = (nextOperation) => {
     const inputValue = parseFloat(display);
     
@@ -66,7 +60,6 @@ function Calculator() {
     setOperation(nextOperation);
   };
 
-  // Számítás végrehajtása
   const calculate = (firstOperand, secondOperand, operation) => {
     switch (operation) {
       case "+":
@@ -84,7 +77,6 @@ function Calculator() {
     }
   };
 
-  // Gomb kezelés
   const handleButton = (value) => {
     if (typeof value === "number") {
       inputDigit(value);

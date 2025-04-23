@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web-programozás 1 Házi feladat</title>
     <link rel="stylesheet" href="../src/css/styles.css">
-    <link rel="stylesheet" href="../src/react/dist/assets/index-6d091d40.css">
+    <link rel="stylesheet" href="../react/dist/assets/index-6d091d40.css">
 </head>
 <body>
     <div id="legacy-content" style="display: none;">
@@ -19,8 +19,8 @@
                 <li><a href="html5.html">HTML5 menü</a></li>
                 <li><a href="ajax.html">AJAX menü</a></li>
                 <li><a href="oojs.html">OOJS menü</a></li>
-                <li><a href="reactchart.html">React Chart</a></li>
-                <li><a href="index.html#/calculator">Számológép</a></li>
+                <li><a href="chart.html">Chart menü</a></li>
+                <li><a href="#/calculator">Számológép</a></li>
             </ul>
         </nav>
         <div class="container">
@@ -31,7 +31,7 @@
                 <p>HTML5 menü</p>
                 <p>AJAX menü</p>
                 <p>OOJS menü</p>
-                <p>React Chart</p>
+                <p>Chart menü</p>
                 <p>Számológép (React)</p>
             </aside>
             <main id="content"></main>
@@ -41,27 +41,33 @@
         </footer>
     </div>
     <div id="root"></div>
-    <script type="module" src="../src/react/dist/assets/index-ddc1e082.js"></script>
+    <script type="module" src="../react/dist/assets/index-ddc1e082.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const currentHash = window.location.hash;
+        const legacyContent = document.getElementById('legacy-content');
+        const root = document.getElementById('root');
         
-        if (currentHash === '#/calculator' || !currentHash) {
-            if (!currentHash) {
-                window.location.hash = '/calculator';
+        function checkRoute() {
+            if (window.location.hash.startsWith('#/')) {
+                legacyContent.style.display = 'none';
+                root.style.display = 'block';
+            } else {
+                legacyContent.style.display = 'block';
+                root.style.display = 'none';
             }
-            
-            setTimeout(function() {
-                const rootContent = document.getElementById('root').innerHTML.trim();
-                if (rootContent === '') {
-                    document.getElementById('legacy-content').style.display = 'block';
-                } else {
-                    document.body.classList.add('react-loaded');
-                }
-            }, 300);
-        } else {
-            document.getElementById('legacy-content').style.display = 'block';
         }
+        
+        window.addEventListener('hashchange', checkRoute);
+        checkRoute();
+        
+        document.querySelectorAll('#legacy-content nav a').forEach(link => {
+            if (!link.getAttribute('href').startsWith('#')) {
+                link.addEventListener('click', function() {
+                    legacyContent.style.display = 'block';
+                    root.style.display = 'none';
+                });
+            }
+        });
     });
     </script>
 </body>

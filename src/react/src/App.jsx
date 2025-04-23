@@ -1,20 +1,21 @@
-import { Link, Routes, Route } from 'react-router-dom'
-import Calculator from './Calculator'
-import TodoList from './TodoList'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './Layout';
+import Home from './Home';
+import Calculator from './components/Calculator';
+import TodoList from './components/TodoList';
+import NoPage from './NoPage';
 
 export default function App() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">React Beadandó</h1>
-      <nav className="mb-4 flex gap-4">
-        <Link to="/calculator" className="text-blue-500 hover:underline">Számológép</Link>
-        <Link to="/todo" className="text-blue-500 hover:underline">Teendők</Link>
-      </nav>
+    <Router>
       <Routes>
-        <Route path="/calculator" element={<Calculator />} />
-        <Route path="/todo" element={<TodoList />} />
-        <Route path="*" element={<p>Válassz egy menüpontot!</p>} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="calculator" element={<Calculator />} />
+          <Route path="todo" element={<TodoList />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
       </Routes>
-    </div>
-  )
+    </Router>
+  );
 }
