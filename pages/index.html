@@ -5,70 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web-programozás 1 Házi feladat</title>
     <link rel="stylesheet" href="../src/css/styles.css">
-    <link rel="stylesheet" href="../react/dist/assets/index-6d091d40.css">
 </head>
 <body>
-    <div id="legacy-content" style="display: none;">
-        <header>
-            <h1>Web-programozás 1 Előadás Házi feladat</h1>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Kezdőlap</a></li>
-                <li><a href="table.html">Táblázat menü</a></li>
-                <li><a href="html5.html">HTML5 menü</a></li>
-                <li><a href="ajax.html">AJAX menü</a></li>
-                <li><a href="oojs.html">OOJS menü</a></li>
-                <li><a href="chart.html">Chart menü</a></li>
-                <li><a href="#/calculator">Számológép</a></li>
-            </ul>
-        </nav>
-        <div class="container">
-            <aside>
-                <h3>Oldal tartalma</h3>
-                <p>Egységesen megjelenő honlap vízszintes menüvel</p>
-                <p>Táblázat menü</p>
-                <p>HTML5 menü</p>
-                <p>AJAX menü</p>
-                <p>OOJS menü</p>
-                <p>Chart menü</p>
-                <p>Számológép (React)</p>
-            </aside>
-            <main id="content"></main>
-        </div>
-        <footer>
-            <p>Sik Dominik – Q60PVQ</p>
-        </footer>
+    <header>
+        <h1>Web-programozás 1 Előadás Házi feladat</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Kezdőlap</a></li>
+            <li><a href="table.html">Táblázat menü</a></li>
+            <li><a href="html5.html">HTML5 menü</a></li>
+            <li><a href="ajax.html">AJAX menü</a></li>
+            <li><a href="oojs.html">OOJS menü</a></li>
+            <li><a href="chart.html">Chart menü</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <aside>
+            <h3>Oldal tartalma</h3>
+            <p>Egységesen megjelenő honlap vízszintes menüvel</p>
+            <p>Táblázat menü</p>
+            <p>HTML5 menü</p>
+            <p>AJAX menü</p>
+            <p>OOJS menü</p>
+            <p>Chart menü</p>
+            <p>React alkalmazások</p>
+        </aside>
+        <main id="content">
+            <h2>Hello! Ez a Web-programozás 1 Házi feladat oldala!</h2>
+        </main>
     </div>
-    <div id="root"></div>
-    <script type="module" src="../react/dist/assets/index-ddc1e082.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const legacyContent = document.getElementById('legacy-content');
-        const root = document.getElementById('root');
-        
-        function checkRoute() {
-            if (window.location.hash.startsWith('#/')) {
-                legacyContent.style.display = 'none';
-                root.style.display = 'block';
-            } else {
-                legacyContent.style.display = 'block';
-                root.style.display = 'none';
-            }
-        }
-        
-        window.addEventListener('hashchange', checkRoute);
-        checkRoute();
-        
-        document.querySelectorAll('#legacy-content nav a').forEach(link => {
-            if (!link.getAttribute('href').startsWith('#')) {
-                link.addEventListener('click', function() {
-                    legacyContent.style.display = 'block';
-                    root.style.display = 'none';
-                });
-            }
-        });
-    });
-    </script>
+    <footer>
+        <p>Sik Dominik – Q60PVQ</p>
+    </footer>
 </body>
 </html>
