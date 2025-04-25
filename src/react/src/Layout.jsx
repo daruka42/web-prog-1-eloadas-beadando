@@ -6,6 +6,9 @@ function Layout() {
       <header className="header">
         <div className="container">
           <h1 className="nav-logo">Web-programozás 1 Házi feladat - React alkalmazások</h1>
+          <a href="/index.html" className="back-to-main">
+            ← Főoldalra
+          </a>
         </div>
       </header>
       
@@ -26,7 +29,7 @@ function Layout() {
       </div>
       
       <footer className="p-3 mt-4 text-center">
-        <p>© 2025 - Web-programozás 1</p>
+        <p>Sik Dominik - Q60PVQ</p>
       </footer>
     </>
   );

@@ -4,6 +4,7 @@ import Home from './Home';
 import Calculator from './components/Calculator';
 import TodoList from './components/TodoList';
 import NoPage from './NoPage';
+import './App.css';
 
 export default function App() {
   return (
